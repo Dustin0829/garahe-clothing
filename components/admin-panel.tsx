@@ -22,14 +22,31 @@ export default function AdminPanel({ products, onAddProduct, orders }: AdminPane
     size: "M",
     image: "",
   })
+  const [selectedFile, setSelectedFile] = useState<File | null>(null)
+  const [imagePreview, setImagePreview] = useState<string | null>(null)
+
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0]
+    if (file) {
+      setSelectedFile(file)
+      const reader = new FileReader()
+      reader.onload = (e) => {
+        setImagePreview(e.target?.result as string)
+      }
+      reader.readAsDataURL(file)
+    }
+  }
 
   const handleAddProduct = (e: React.FormEvent) => {
     e.preventDefault()
     onAddProduct({
       ...formData,
       price: Number.parseFloat(formData.price),
+      image: selectedFile ? URL.createObjectURL(selectedFile) : "",
     })
     setFormData({ name: "", price: "", category: "tees", size: "M", image: "" })
+    setSelectedFile(null)
+    setImagePreview(null)
     setShowAddProduct(false)
   }
 
@@ -124,13 +141,27 @@ export default function AdminPanel({ products, onAddProduct, orders }: AdminPane
                     <option value="XL">XL</option>
                     <option value="XXL">XXL</option>
                   </select>
-                  <input
-                    type="text"
-                    placeholder="Image URL"
-                    value={formData.image}
-                    onChange={(e) => setFormData({ ...formData, image: e.target.value })}
-                    className="md:col-span-2 bg-background border border-border px-4 py-2 text-foreground placeholder-muted-foreground focus:outline-none focus:border-accent"
-                  />
+                  <div className="md:col-span-2">
+                    <label className="block text-sm font-medium text-foreground mb-2">
+                      Product Image
+                    </label>
+                    <input
+                      type="file"
+                      accept="image/*"
+                      onChange={handleFileChange}
+                      className="w-full bg-background border border-border px-4 py-2 text-foreground focus:outline-none focus:border-accent file:mr-4 file:py-2 file:px-4 file:rounded-none file:border-0 file:text-sm file:font-semibold file:bg-accent file:text-accent-foreground hover:file:bg-accent/90"
+                    />
+                    {imagePreview && (
+                      <div className="mt-4">
+                        <p className="text-sm text-muted-foreground mb-2">Preview:</p>
+                        <img
+                          src={imagePreview}
+                          alt="Product preview"
+                          className="w-32 h-32 object-cover border border-border"
+                        />
+                      </div>
+                    )}
+                  </div>
                   <div className="md:col-span-2 flex gap-4">
                     <Button
                       type="submit"
@@ -161,7 +192,7 @@ export default function AdminPanel({ products, onAddProduct, orders }: AdminPane
                     <h4 className="font-bold text-lg mb-2">{product.name}</h4>
                     <div className="flex gap-6 text-sm text-muted-foreground">
                       <span>
-                        Price: <span className="text-accent font-bold">${product.price}</span>
+                        Price: <span className="text-accent font-bold">PHP {product.price}</span>
                       </span>
                       <span>
                         Category: <span className="text-foreground font-bold">{product.category}</span>
@@ -217,13 +248,13 @@ export default function AdminPanel({ products, onAddProduct, orders }: AdminPane
                       {order.items.map((item: any, idx: number) => (
                         <div key={idx} className="flex justify-between text-sm">
                           <span>{item.name}</span>
-                          <span className="font-bold">${item.price}</span>
+                          <span className="font-bold">PHP {item.price}</span>
                         </div>
                       ))}
                     </div>
                     <div className="flex justify-between items-center pt-4 border-t border-border">
                       <span className="font-bold tracking-widest">TOTAL:</span>
-                      <span className="text-xl font-black">${order.total}</span>
+                      <span className="text-xl font-black">PHP {order.total}</span>
                     </div>
                   </div>
                 </div>

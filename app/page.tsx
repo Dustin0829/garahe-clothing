@@ -5,20 +5,19 @@ import Navigation from "@/components/navigation"
 import LandingPage from "@/components/landing-page"
 import ShopPage from "@/components/shop-page"
 import AdminPanel from "@/components/admin-panel"
-import Cart from "@/components/cart"
+import CartPage from "@/app/cart/page"
 import OrderModal from "@/components/order-modal"
 import Footer from "@/components/footer"
 
 export default function Home() {
-  const [currentPage, setCurrentPage] = useState<"landing" | "shop" | "admin">("landing")
+  const [currentPage, setCurrentPage] = useState<"landing" | "shop" | "admin" | "cart">("landing")
   const [cartItems, setCartItems] = useState<any[]>([])
-  const [showCart, setShowCart] = useState(false)
   const [showOrderModal, setShowOrderModal] = useState(false)
   const [products, setProducts] = useState<any[]>([
     {
       id: 1,
       name: "Classic Garahe Tee",
-      price: 45,
+      price: 300,
       image: "/model-1-front.png",
       category: "tees",
       size: "M",
@@ -27,7 +26,7 @@ export default function Home() {
     {
       id: 2,
       name: "Garahe Culture Tee",
-      price: 50,
+      price: 350,
       image: "/model-1-back.png",
       category: "tees",
       size: "L",
@@ -36,7 +35,7 @@ export default function Home() {
     {
       id: 3,
       name: "Oversized Garahe Tee",
-      price: 55,
+      price: 300,
       image: "/model-2-side.png",
       category: "tees",
       size: "XL",
@@ -45,7 +44,7 @@ export default function Home() {
     {
       id: 4,
       name: "Duo Pack - Garahe Tees",
-      price: 85,
+      price: 350,
       image: "/model-duo.png",
       category: "bundles",
       size: "M/L",
@@ -54,17 +53,21 @@ export default function Home() {
   ])
   const [orders, setOrders] = useState<any[]>([])
 
-  const addToCart = (product: any, options: { size: string; color: string; variant: string }) => {
-    setCartItems([
-      ...cartItems,
-      {
-        ...product,
-        cartId: Math.random(),
-        selectedSize: options.size,
-        selectedColor: options.color,
-        selectedVariant: options.variant,
-      },
-    ])
+  const addToCart = (product: any, options: { size: string; color: string; variant: string; quantity: number }) => {
+    console.log("addToCart called with:", { product, options })
+    
+    // Add multiple items if quantity > 1
+    const newItems = Array.from({ length: options.quantity }, (_, index) => ({
+      ...product,
+      cartId: Math.random() + index,
+      selectedSize: options.size,
+      selectedColor: options.color,
+      selectedVariant: options.variant,
+    }))
+    
+    console.log("Adding items to cart:", newItems)
+    setCartItems([...cartItems, ...newItems])
+    console.log("Cart items after add:", [...cartItems, ...newItems])
   }
 
   const removeFromCart = (cartId: number) => {
@@ -94,10 +97,8 @@ export default function Home() {
         currentPage={currentPage}
         setCurrentPage={setCurrentPage}
         cartCount={cartItems.length}
-        onCartClick={() => setShowCart(!showCart)}
+        onCartClick={() => setCurrentPage("cart")}
       />
-
-      {showCart && <Cart items={cartItems} onRemove={removeFromCart} onCheckout={() => setShowOrderModal(true)} />}
 
       {showOrderModal && (
         <OrderModal items={cartItems} onClose={() => setShowOrderModal(false)} onSubmit={handleCheckout} />
@@ -107,6 +108,15 @@ export default function Home() {
         {currentPage === "landing" && <LandingPage onShopClick={() => setCurrentPage("shop")} />}
         {currentPage === "shop" && <ShopPage products={products} onAddToCart={addToCart} />}
         {currentPage === "admin" && <AdminPanel products={products} onAddProduct={addProduct} orders={orders} />}
+        {currentPage === "cart" && (
+          <CartPage 
+            items={cartItems} 
+            onRemove={removeFromCart} 
+            onUpdateQuantity={() => {}} 
+            onCheckout={() => setShowOrderModal(true)}
+            onNavigateToShop={() => setCurrentPage("shop")}
+          />
+        )}
       </div>
 
       <Footer />

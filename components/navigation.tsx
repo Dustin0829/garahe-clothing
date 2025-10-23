@@ -1,10 +1,10 @@
 "use client"
 
-import { ShoppingCart, Settings } from "lucide-react"
+import { ShoppingCart } from "lucide-react"
 
 interface NavigationProps {
   currentPage: string
-  setCurrentPage: (page: "landing" | "shop" | "admin") => void
+  setCurrentPage: (page: "landing" | "shop" | "admin" | "cart") => void
   cartCount: number
   onCartClick: () => void
 }
@@ -42,7 +42,10 @@ export default function Navigation({ currentPage, setCurrentPage, cartCount, onC
         </div>
 
         <div className="flex items-center gap-4">
-          <button onClick={onCartClick} className="relative p-2 hover:bg-secondary rounded transition">
+          <button 
+            onClick={() => setCurrentPage("cart")} 
+            className={`relative p-2 hover:bg-secondary rounded transition ${currentPage === "cart" ? "bg-secondary" : ""}`}
+          >
             <ShoppingCart size={20} />
             {cartCount > 0 && (
               <span className="absolute top-0 right-0 bg-accent text-accent-foreground text-xs font-bold w-5 h-5 rounded-full flex items-center justify-center">
@@ -51,13 +54,6 @@ export default function Navigation({ currentPage, setCurrentPage, cartCount, onC
             )}
           </button>
 
-          <button
-            onClick={() => setCurrentPage("admin")}
-            className={`p-2 hover:bg-secondary rounded transition ${currentPage === "admin" ? "bg-secondary" : ""}`}
-            title="Admin Panel"
-          >
-            <Settings size={20} />
-          </button>
         </div>
       </div>
     </nav>

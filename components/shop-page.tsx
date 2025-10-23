@@ -99,7 +99,7 @@ export default function ShopPage({ products, onAddToCart }: ShopPageProps) {
               )}
 
               <div className="flex items-center justify-between mb-3 md:mb-4 flex-wrap gap-2">
-                <span className="text-base md:text-lg font-black">${product.price}</span>
+                <span className="text-base md:text-lg font-black">PHP{product.price}</span>
                 <span className="text-xs text-muted-foreground font-bold">Size: {product.size}</span>
               </div>
 

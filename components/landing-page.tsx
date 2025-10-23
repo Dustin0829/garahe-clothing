@@ -12,12 +12,19 @@ export default function LandingPage({ onShopClick }: LandingPageProps) {
     <div className="pt-20 min-h-screen bg-background pb-20">
       {/* Hero Section */}
       <section className="relative min-h-screen flex items-center justify-center overflow-hidden px-4">
-        <div className="absolute inset-0 bg-gradient-to-b from-secondary/20 to-background" />
+        {/* Background Image */}
+        <div 
+          className="absolute inset-0 bg-cover bg-center bg-no-repeat"
+          style={{
+            backgroundImage: "url('/garahe-logo.png')",
+            backgroundSize: "cover",
+            backgroundPosition: "center",
+            filter: "brightness(0.3) contrast(1.2)"
+          }}
+        />
+        <div className="absolute inset-0 bg-gradient-to-b from-black/60 to-black/80" />
 
         <div className="relative z-10 text-center max-w-4xl mx-auto w-full">
-          <div className="mb-6 md:mb-8 inline-block">
-            <img src="/garahe-logo.png" alt="Garahe Logo" className="h-32 md:h-40 w-32 md:w-40 mx-auto opacity-95" />
-          </div>
 
           <h1 className="text-5xl md:text-7xl lg:text-8xl font-black tracking-tighter mb-4 md:mb-6">
             <span className="metallic-text">GARAHE</span>
@@ -41,9 +48,6 @@ export default function LandingPage({ onShopClick }: LandingPageProps) {
           </Button>
         </div>
 
-        <div className="hidden md:block absolute bottom-0 right-0 w-1/3 h-2/3 opacity-30 pointer-events-none">
-          <img src="/model-1-front.png" alt="Featured" className="w-full h-full object-cover" />
-        </div>
       </section>
 
       {/* Brand Story Section */}

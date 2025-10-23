@@ -5,6 +5,7 @@ import type React from "react"
 import { useState } from "react"
 import { Button } from "@/components/ui/button"
 import { X } from "lucide-react"
+import { useToast } from "@/hooks/use-toast"
 
 interface OrderModalProps {
   items: any[]
@@ -21,12 +22,17 @@ export default function OrderModal({ items, onClose, onSubmit }: OrderModalProps
     zipCode: "",
     cardNumber: "",
   })
+  const { toast } = useToast()
 
   const total = items.reduce((sum, item) => sum + item.price, 0)
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
     onSubmit(formData)
+    toast({
+      title: "Order Placed Successfully",
+      description: "Your order has been submitted and will be processed shortly",
+    })
   }
 
   return (
@@ -50,14 +56,14 @@ export default function OrderModal({ items, onClose, onSubmit }: OrderModalProps
                 {items.map((item, idx) => (
                   <div key={idx} className="flex justify-between text-sm">
                     <span>{item.name}</span>
-                    <span className="font-bold">${item.price}</span>
+                    <span className="font-bold">PHP {item.price}</span>
                   </div>
                 ))}
               </div>
               <div className="border-t border-border pt-4">
                 <div className="flex justify-between items-center">
                   <span className="font-bold tracking-widest">TOTAL:</span>
-                  <span className="text-2xl font-black">${total}</span>
+                  <span className="text-2xl font-black">PHP {total}</span>
                 </div>
               </div>
             </div>
