@@ -9,6 +9,46 @@ import CartPage from "@/app/cart/page"
 import OrderModal from "@/components/order-modal"
 import Footer from "@/components/footer"
 
+// Sample products data
+const initialProducts = [
+  {
+    id: 1,
+    name: "Classic Garahe Tee",
+    price: 300,
+    image: "/model-1-front.png",
+    category: "tees",
+    size: "M",
+    description: "Iconic metallic chain logo on premium black cotton",
+  },
+  {
+    id: 2,
+    name: "Garahe Culture Tee",
+    price: 350,
+    image: "/model-1-back.png",
+    category: "tees",
+    size: "L",
+    description: "Back print with culture manifesto and graphics",
+  },
+  {
+    id: 3,
+    name: "Oversized Garahe Tee",
+    price: 300,
+    image: "/model-2-side.png",
+    category: "tees",
+    size: "XL",
+    description: "Oversized fit with metallic chain branding",
+  },
+  {
+    id: 4,
+    name: "Duo Pack - Garahe Tees",
+    price: 350,
+    image: "/model-duo.png",
+    category: "bundles",
+    size: "M/L",
+    description: "Two classic Garahe tees - perfect for the crew",
+  },
+]
+
 export default function Home() {
   const [currentPage, setCurrentPage] = useState<"landing" | "shop" | "admin" | "cart">("landing")
   const [cartItems, setCartItems] = useState<any[]>([])
